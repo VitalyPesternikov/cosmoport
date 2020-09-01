@@ -13,11 +13,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
 import java.util.List;
+
+import static com.space.specification.ShipSpecification.getSpecification;
 
 @RestController
 @RequestMapping("/rest")
@@ -48,12 +46,8 @@ public class ShipController {
             @RequestParam(value = "pageNumber", required = false, defaultValue = "0") Integer pageNumber,
             @RequestParam(value = "pageSize", required = false, defaultValue = "3") Integer pageSize
     ) {
-        Specification<Ship> specification = new Specification<Ship>() {
-            @Override
-            public Predicate toPredicate(Root<Ship> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
-                return null;
-            }
-        };
+        Specification<Ship> specification = getSpecification(name, planet, shipType, after, before, isUsed, minSpeed, maxSpeed,
+                minCrewSize, maxCrewSize, minRating, maxRating);
         Pageable pageable = PageRequest.of(pageNumber, pageSize, Sort.by(order.getFieldName()));
         return shipService.getAllShips(specification, pageable).getContent();
     }
@@ -73,12 +67,8 @@ public class ShipController {
             @RequestParam(value = "minRating", required = false) Double minRating,
             @RequestParam(value = "maxRating", required = false) Double maxRating
     ) {
-        Specification<Ship> specification = new Specification<Ship>() {
-            @Override
-            public Predicate toPredicate(Root<Ship> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
-                return null;
-            }
-        };
+        Specification<Ship> specification = getSpecification(name, planet, shipType, after, before, isUsed, minSpeed, maxSpeed,
+                minCrewSize, maxCrewSize, minRating, maxRating);
         return shipService.getAllShips(specification).size();
     }
 }
