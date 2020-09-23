@@ -8,10 +8,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -52,7 +51,7 @@ public class ShipController {
         return shipService.getAllShips(specification, pageable).getContent();
     }
 
-    @RequestMapping(value = "/ships/count", method = RequestMethod.GET)
+    @GetMapping(value = "/ships/count")
     public Integer getAllShipsCount(
             @RequestParam(value = "name", required = false) String name,
             @RequestParam(value = "planet", required = false) String planet,
@@ -70,5 +69,11 @@ public class ShipController {
         Specification<Ship> specification = getSpecification(name, planet, shipType, after, before, isUsed, minSpeed, maxSpeed,
                 minCrewSize, maxCrewSize, minRating, maxRating);
         return shipService.getAllShips(specification).size();
+    }
+
+    @PostMapping(value = "/ships")
+    @ResponseBody
+    public ResponseEntity<Ship> addShip(@RequestBody Ship ship) {
+        return new ResponseEntity<>(shipService.createShip(ship), HttpStatus.OK);
     }
 }

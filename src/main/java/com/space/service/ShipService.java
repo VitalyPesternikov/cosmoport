@@ -11,4 +11,6 @@ public interface ShipService {
     List<Ship> getAllShips(Specification<Ship> shipSpecification);
 
     Page<Ship> getAllShips(Specification<Ship> shipSpecification, Pageable pageable);
+
+    Ship createShip(Ship ship);
 }
